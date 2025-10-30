@@ -8,6 +8,7 @@ on:
 jobs:
   migrate:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -16,8 +17,8 @@ jobs:
         uses: liquibase/liquibase-github-action@v5
         with:
           operation: 'update'
+          changelogFile: 'changelog/changelog.xml'
         env:
           LIQUIBASE_COMMAND_URL: ${{ secrets.DB_URL }}
           LIQUIBASE_COMMAND_USERNAME: ${{ secrets.DB_USER }}
           LIQUIBASE_COMMAND_PASSWORD: ${{ secrets.DB_PASS }}
-
