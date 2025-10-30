@@ -10,6 +10,21 @@ jobs:
   migrate-database:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: liquibase_auto
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -24,6 +39,17 @@ jobs:
         run: |
           wget https://github.com/liquibase/liquibase/releases/download/v5.0.1/liquibase-5.0.1.zip
           unzip liquibase-5.0.1.zip -d liquibase
+
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          for i in {1..10}; do
+            if pg_isready -h localhost -p 5432 -U postgres; then
+              echo "PostgreSQL is ready!"
+              break
+            fi
+            echo "Waiting for PostgreSQL..."
+            sleep 5
+          done
 
       - name: Run Liquibase Update
         run: |
