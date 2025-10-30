@@ -1,0 +1,36 @@
+name: Liquibase CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  migrate-database:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Download Liquibase
+        run: |
+          wget https://github.com/liquibase/liquibase/releases/download/v5.0.1/liquibase-5.0.1.zip
+          unzip liquibase-5.0.1.zip -d liquibase
+
+      - name: Run Liquibase Update
+        run: |
+          ./liquibase/liquibase \
+            --classpath=postgresql-42.7.3.jar \
+            --changeLogFile=changelog.xml \
+            --url="jdbc:postgresql://localhost:5432/liquibase_auto" \
+            --username=postgres \
+            --password=postgres \
+            update
