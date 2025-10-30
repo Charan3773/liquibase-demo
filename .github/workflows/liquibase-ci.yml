@@ -8,36 +8,16 @@ on:
 jobs:
   migrate:
     runs-on: ubuntu-latest
-
     steps:
-      # Step 1: Checkout your repository
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      # Step 2: Set up Java (needed for Liquibase)
-      - name: Set up Java
-        uses: actions/setup-java@v3
+      - name: Run Liquibase migrations
+        uses: liquibase/liquibase-github-action@v5
         with:
-          distribution: 'temurin'
-          java-version: '21'
-
-      # Step 3: Download Liquibase CLI
-      - name: Install Liquibase
-        run: |
-          curl -Ls https://github.com/liquibase/liquibase/releases/download/v5.0.1/liquibase-5.0.1.tar.gz -o liquibase.tar.gz
-          tar -xzf liquibase.tar.gz
-          chmod +x liquibase/liquibase
-
-      # Step 4: Run Liquibase update using Render DB URL
-      - name: Run Liquibase Update
+          operation: 'update'
         env:
-          DB_URL: ${{ secrets.DB_URL }}
-          DB_USERNAME: ${{ secrets.DB_USERNAME }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        run: |
-          ./liquibase/liquibase \
-            --url=$DB_URL \
-            --username=$DB_USERNAME \
-            --password=$DB_PASSWORD \
-            --changeLogFile=changelog/changelog.xml \
-            update
+          LIQUIBASE_COMMAND_URL: ${{ secrets.DB_URL }}
+          LIQUIBASE_COMMAND_USERNAME: ${{ secrets.DB_USER }}
+          LIQUIBASE_COMMAND_PASSWORD: ${{ secrets.DB_PASS }}
+
