@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.8.xsd">
+
+    <!-- Step 1: Create 'users' table -->
+    <changeSet id="1" author="charan">
+        <createTable tableName="users">
+            <column name="id" type="SERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(100)"/>
+            <column name="age" type="INT"/>
+            <column name="city" type="VARCHAR(100)"/>
+        </createTable>
+    </changeSet>
+
+    <!-- Step 2: Insert 5 sample rows -->
+    <changeSet id="2" author="charan">
+        <insert tableName="users">
+            <column name="name" value="Alice"/>
+            <column name="age" value="23"/>
+            <column name="city" value="Hyderabad"/>
+        </insert>
+        <insert tableName="users">
+            <column name="name" value="Bob"/>
+            <column name="age" value="29"/>
+            <column name="city" value="Delhi"/>
+        </insert>
+        <insert tableName="users">
+            <column name="name" value="Charlie"/>
+            <column name="age" value="31"/>
+            <column name="city" value="Bangalore"/>
+        </insert>
+        <insert tableName="users">
+            <column name="name" value="Diana"/>
+            <column name="age" value="27"/>
+            <column name="city" value="Chennai"/>
+        </insert>
+        <insert tableName="users">
+            <column name="name" value="Ethan"/>
+            <column name="age" value="24"/>
+            <column name="city" value="Pune"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
